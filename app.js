@@ -1,19 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const { celebrate, Joi, errors } = require('celebrate');
+const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('cors');
-const movieRoutes = require('./routes/movies');
-const userRoutes = require('./routes/users');
-const NotFound = require('./utils/errors/NotFound');
+const routes = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { login, createUser, logout } = require('./controllers/users');
-const auth = require('./middlewares/auth');
 const serverError = require('./middlewares/serverError');
 
 const options = {
@@ -54,31 +50,7 @@ app.use(cookieParser());
 
 app.use(requestLogger);
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().email().required(),
-    password: Joi.string().min(4).required(),
-  }),
-}), login);
-
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().email().required(),
-    password: Joi.string().min(4).required(),
-    name: Joi.string().min(2).max(30),
-  }),
-}), createUser);
-
-app.use('/logout', logout);
-
-app.use(auth);
-
-app.use(movieRoutes);
-app.use(userRoutes);
-
-app.use(() => {
-  throw new NotFound('Запрашиваемый ресурс не найден');
-});
+app.use(routes);
 
 app.use(errorLogger);
 

@@ -57,7 +57,7 @@ module.exports.deleteMovie = (req, res, next) => {
       throw new NotFound('Фильм по указанному id не найден');
     })
     .then((movie) => {
-      if (movie.owner.equals(req.user._id)) {
+      if (String(movie.owner) === req.user._id) {
         movie.remove(movieId)
           .then(() => {
             res.status(200).send({ message: 'Фильм удален' });

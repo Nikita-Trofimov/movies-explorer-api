@@ -25,7 +25,7 @@ const options = {
   credentials: true,
 };
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, NODE_ENV, DATABASE_URL } = process.env;
 const app = express();
 
 app.use('*', cors(options));
@@ -38,7 +38,7 @@ const limiter = rateLimit({
 app.use(helmet());
 app.use(limiter);
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect(NODE_ENV === 'production' ? DATABASE_URL : 'mongodb://localhost:27017/bitfilmsdb', {
   useUnifiedTopology: true,
   useNewUrlParser: true,
   useCreateIndex: true,

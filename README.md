@@ -7,5 +7,5 @@
 * Ведутся логи доступа и ошибок при помощи модуля *winston*.
 * Развертка осуществлена на виртуальной машине сервиса **Yandex.Cloud**. Работа с файлами/API-запросами разделена между серверами Node и Nginx.
 
-[Ссылка на API](api.nikita-movie-explorer.nomoredomains.club)  
+[Ссылка на API](https://api.nikita-movie-explorer.nomoredomains.club)  
 IP - 178.154.207.151

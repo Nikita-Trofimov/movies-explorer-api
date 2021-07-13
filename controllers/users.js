@@ -8,25 +8,34 @@ const AutorizationError = require('../utils/errors/AutorizationError');
 const NotFound = require('../utils/errors/NotFound');
 const CastError = require('../utils/errors/CastError');
 const UserIsExist = require('../utils/errors/UserIsExist');
+const {
+  USERIDERORR,
+  USERDATAERORR,
+  USERNOTFOUND,
+  USERREGISTRED,
+  USERWRONGEMAIL,
+  USERAUTHSUCCESS,
+  USERLOGOUT,
+} = require('../utils/constants');
+const { DEVJWT, EXPIRESJWT, SALT_ROUNDS } = require('../utils/conf');
 
-const SALT_ROUNDS = 10;
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 function errCheck(err, next) {
   if (err.name === 'CastError') {
-    next(new CastError('Некорректный ID пользователя'));
+    next(new CastError(USERIDERORR));
   }
   if (err.name === 'ValidationError') {
-    next(new ValidationError('Переданы некорректные данные'));
+    next(new ValidationError(USERDATAERORR));
   }
   if (err.name === 'MongoError' && err.code === 11000) {
-    next(new UserIsExist('Переданы некорректные данные при создании пользователя'));
+    next(new UserIsExist(USERDATAERORR));
   }
   next(err);
 }
 
 module.exports.getAuthUser = (req, res, next) => {
-  User.findById(req.user._id).orFail(new NotFound('Пользователь не найден'))
+  User.findById(req.user._id).orFail(new NotFound(USERNOTFOUND))
     .then((user) => res.status(200).send(user))
     .catch((err) => errCheck(err, next));
 };
@@ -42,7 +51,7 @@ module.exports.createUser = (req, res, next) => {
       password: hash,
       name,
     }))
-    .then(() => res.status(200).send({ message: 'Вы зарегистрировались' }))
+    .then(() => res.status(200).send({ message: USERREGISTRED }))
     .catch((err) => errCheck(err, next));
 };
 
@@ -53,33 +62,33 @@ module.exports.updateUser = (req, res, next) => {
       new: true,
       upsert: false,
       runValidators: true,
-    }).orFail(new NotFound('Пользователь не найден'))
+    }).orFail(new NotFound(USERNOTFOUND))
     .then((user) => res.send(user))
     .catch((err) => errCheck(err, next));
 };
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne({ email }).select('+password').orFail(new AutorizationError('Пользователь не найден'))
+  User.findOne({ email }).select('+password').orFail(new AutorizationError(USERNOTFOUND))
     .then((user) => bcrypt.compare(
       password,
       user.password,
     ).then(
       (isValid) => {
         if (!isValid) {
-          throw new AutorizationError('Неверный email или пароль');
+          throw new AutorizationError(USERWRONGEMAIL);
         }
         const token = jwt.sign(
           { _id: user._id },
-          NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-          { expiresIn: '7d' },
+          NODE_ENV === 'production' ? JWT_SECRET : DEVJWT,
+          { expiresIn: EXPIRESJWT },
         );
         return res.status(200).cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
           sameSite: 'None',
           secure: true,
-        }).send({ message: 'Вы успешно авторизовались' })
+        }).send({ message: USERAUTHSUCCESS })
           .end();
       },
     ))
@@ -93,7 +102,7 @@ module.exports.logout = (req, res, next) => {
       secure: true,
       httpOnly: true,
     });
-    res.send({ message: 'Вы вышли из системы' });
+    res.send({ message: USERLOGOUT });
   } catch (err) {
     next(err);
   }

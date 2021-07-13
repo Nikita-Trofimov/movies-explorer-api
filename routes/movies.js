@@ -3,6 +3,7 @@ const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 
 const { getMovies, createMovie, deleteMovie } = require('../controllers/movies');
+const { VALMOVIEIMG, VALMOVIETRAILER, VALMOVIETHUMBNAIL } = require('../utils/constants');
 
 router.get('/', getMovies);
 
@@ -18,19 +19,19 @@ router.post('/',
         if (validator.isURL(value)) {
           return value;
         }
-        return helpers.message('Поле "image" должно быть валидным url-адресом');
+        return helpers.message(VALMOVIEIMG);
       }),
       trailer: Joi.string().required().custom((value, helpers) => {
         if (validator.isURL(value)) {
           return value;
         }
-        return helpers.message('Поле "trailer" должно быть валидным url-адресом');
+        return helpers.message(VALMOVIETRAILER);
       }),
       thumbnail: Joi.string().required().custom((value, helpers) => {
         if (validator.isURL(value)) {
           return value;
         }
-        return helpers.message('Поле "thumbnail" должно быть валидным url-адресом');
+        return helpers.message(VALMOVIETHUMBNAIL);
       }),
       movieId: Joi.number().required(),
       nameRU: Joi.string().required(),

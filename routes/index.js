@@ -6,6 +6,7 @@ const movieRouter = require('./movies');
 const userRouter = require('./users');
 const { createUser, login, logout } = require('../controllers/users');
 const auth = require('../middlewares/auth');
+const { NOTFOUND } = require('../utils/constants');
 
 router.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -30,7 +31,7 @@ router.use('/movies', movieRouter);
 router.use(auth);
 
 router.use(() => {
-  throw new NotFound('Запрашиваемый ресурс не найден');
+  throw new NotFound(NOTFOUND);
 });
 
 module.exports = router;

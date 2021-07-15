@@ -5,6 +5,7 @@ const USERMOVIENOTFOUND = 'Сохраненных фильмов нет';
 const MOVIEFORBIDDEN = 'Фильм недосутпен пользователю';
 const USERIDERORR = 'Некорректный ID пользователя';
 const USERDATAERORR = 'Переданы некорректные данные';
+const USERISEXIST = 'Пользователь уже зарегистрирован';
 const USERNOTFOUND = 'Пользователь не найден';
 const USERREGISTRED = 'Вы зарегистрировались';
 const USERWRONGEMAIL = 'Неверный email или пароль';
@@ -37,4 +38,5 @@ module.exports = {
   VALMOVIETRAILER,
   VALMOVIETHUMBNAIL,
   USERMOVIENOTFOUND,
+  USERISEXIST,
 };

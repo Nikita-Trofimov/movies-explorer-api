@@ -16,6 +16,7 @@ const {
   USERWRONGEMAIL,
   USERAUTHSUCCESS,
   USERLOGOUT,
+  USERISEXIST,
 } = require('../utils/constants');
 const { DEVJWT, EXPIRESJWT, SALT_ROUNDS } = require('../utils/conf');
 
@@ -29,7 +30,7 @@ function errCheck(err, next) {
     next(new ValidationError(USERDATAERORR));
   }
   if (err.name === 'MongoError' && err.code === 11000) {
-    next(new UserIsExist(USERDATAERORR));
+    next(new UserIsExist(USERISEXIST));
   }
   next(err);
 }
@@ -69,7 +70,7 @@ module.exports.updateUser = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne({ email }).select('+password').orFail(new AutorizationError(USERNOTFOUND))
+  User.findOne({ email }).select('+password').orFail(new NotFound(USERNOTFOUND))
     .then((user) => bcrypt.compare(
       password,
       user.password,

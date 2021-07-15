@@ -1,6 +1,7 @@
 const MOVIENOTFOUND = 'Фильм по указанному id не найден';
 const MOVIECREATEERROR = 'Переданы неккоректные данные при создании фильма';
 const MOVIEDELETED = 'Фильм удален';
+const USERMOVIENOTFOUND = 'Сохраненных фильмов нет';
 const MOVIEFORBIDDEN = 'Фильм недосутпен пользователю';
 const USERIDERORR = 'Некорректный ID пользователя';
 const USERDATAERORR = 'Переданы некорректные данные';
@@ -35,4 +36,5 @@ module.exports = {
   VALMOVIEIMG,
   VALMOVIETRAILER,
   VALMOVIETHUMBNAIL,
+  USERMOVIENOTFOUND,
 };

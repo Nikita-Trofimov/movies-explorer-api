@@ -7,10 +7,11 @@ const {
   MOVIECREATEERROR,
   MOVIEDELETED,
   MOVIEFORBIDDEN,
+  USERMOVIENOTFOUND,
 } = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id }).orFail(new NotFound(USERMOVIENOTFOUND))
     .then((movies) => res.send(movies))
     .catch(next);
 };

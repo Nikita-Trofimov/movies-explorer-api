@@ -14,7 +14,7 @@ const USERLOGOUT = 'Вы вышли из системы';
 const AUTHERROR = 'Необходима авторизация';
 const SERVERERROR = 'На сервере произошла ошибка';
 const NOTFOUND = 'Запрашиваемый ресурс не найден';
-
+const MOVIEIDERORR = 'Некорректный ID фильма';
 const VALMOVIEIMG = 'Поле "image" должно быть валидным url-адресом';
 const VALMOVIETRAILER = 'Поле "trailer" должно быть валидным url-адресом';
 const VALMOVIETHUMBNAIL = 'Поле "thumbnail" должно быть валидным url-адресом';
@@ -39,4 +39,5 @@ module.exports = {
   VALMOVIETHUMBNAIL,
   USERMOVIENOTFOUND,
   USERISEXIST,
+  MOVIEIDERORR,
 };

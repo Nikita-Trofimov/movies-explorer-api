@@ -6,7 +6,6 @@ const User = require('../models/user');
 const ValidationError = require('../utils/errors/ValidationError');
 const AutorizationError = require('../utils/errors/AutorizationError');
 const NotFound = require('../utils/errors/NotFound');
-const CastError = require('../utils/errors/CastError');
 const UserIsExist = require('../utils/errors/UserIsExist');
 const {
   USERIDERORR,
@@ -24,7 +23,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 function errCheck(err, next) {
   if (err.name === 'CastError') {
-    next(new CastError(USERIDERORR));
+    next(new ValidationError(USERIDERORR));
   }
   if (err.name === 'ValidationError') {
     next(new ValidationError(USERDATAERORR));

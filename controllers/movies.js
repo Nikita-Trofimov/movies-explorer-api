@@ -8,6 +8,7 @@ const {
   MOVIEDELETED,
   MOVIEFORBIDDEN,
   USERMOVIENOTFOUND,
+  MOVIEIDERORR,
 } = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
@@ -58,7 +59,6 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
-
   Movie.findById(movieId)
     .orFail(() => {
       throw new NotFound(MOVIENOTFOUND);
@@ -74,6 +74,13 @@ module.exports.deleteMovie = (req, res, next) => {
           });
       } else {
         throw new Forbidden(MOVIEFORBIDDEN);
+      }
+    })
+    .catch((err) => {
+      if (err.kind === 'ObjectId') {
+        throw new ValidationError(MOVIEIDERORR);
+      } else {
+        next(err);
       }
     })
     .catch(next);

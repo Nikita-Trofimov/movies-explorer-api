@@ -18,6 +18,7 @@ const app = express();
 app.use('*', cors(CORSOPTIONS));
 
 app.use(helmet());
+app.use(requestLogger);
 app.use(limiter);
 
 mongoose.connect(NODE_ENV === 'production' ? DATABASE_URL : MONGODEV, {
@@ -29,8 +30,6 @@ mongoose.connect(NODE_ENV === 'production' ? DATABASE_URL : MONGODEV, {
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-
-app.use(requestLogger);
 
 app.use(routes);
 

@@ -1,5 +1,5 @@
 const Movie = require('../models/movie');
-const ValidationError = require('../utils/errors/ValidationError');
+const BadRequestError = require('../utils/errors/BadRequestError');
 const NotFound = require('../utils/errors/NotFound');
 const Forbidden = require('../utils/errors/Forbidden');
 const {
@@ -49,7 +49,7 @@ module.exports.createMovie = (req, res, next) => {
     .then((movie) => res.send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError(MOVIECREATEERROR);
+        throw new BadRequestError(MOVIECREATEERROR);
       } else {
         next(err);
       }
@@ -78,7 +78,7 @@ module.exports.deleteMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        throw new ValidationError(MOVIEIDERORR);
+        throw new BadRequestError(MOVIEIDERORR);
       } else {
         next(err);
       }

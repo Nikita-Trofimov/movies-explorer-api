@@ -3,10 +3,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
-const ValidationError = require('../utils/errors/ValidationError');
 const AutorizationError = require('../utils/errors/AutorizationError');
 const NotFound = require('../utils/errors/NotFound');
-const UserIsExist = require('../utils/errors/UserIsExist');
+const BadRequestError = require('../utils/errors/BadRequestError');
 const {
   USERIDERORR,
   USERDATAERORR,
@@ -23,15 +22,12 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 function errCheck(err, next) {
   if (err.name === 'CastError') {
-    next(new ValidationError(USERIDERORR));
-  }
-  if (err.name === 'ValidationError') {
-    next(new ValidationError(USERDATAERORR));
-  }
-  if (err.name === 'MongoError' && err.code === 11000) {
-    next(new UserIsExist(USERISEXIST));
-  }
-  next(err);
+    next(new BadRequestError(USERIDERORR));
+  } else if (err.name === 'ValidationError') {
+    next(new BadRequestError(USERDATAERORR));
+  } else if (err.name === 'MongoError' && err.code === 11000) {
+    next(new BadRequestError(USERISEXIST));
+  } else next(err);
 }
 
 module.exports.getAuthUser = (req, res, next) => {
